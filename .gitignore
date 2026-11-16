@@ -1,0 +1,9 @@
+# build output
+Hydro-fluks
+*.o
+# generated Green's-function outputs
+Green-*.dat
+# local scratch
+_to_delete/
+.ipynb_checkpoints/
+.DS_Store
