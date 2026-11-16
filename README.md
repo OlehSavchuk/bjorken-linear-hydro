@@ -63,7 +63,7 @@ with the three solvers and plots them. Every figure carries the run parameters.
 
 - `delta()` in `Hydro-fluks.cpp` uses `PI = 3.14`; use `M_PI` if the exact Gaussian normalisation matters.
 - The `Noutput` variable is unused (compiler warnings).
-- In `dP`, the explicit code (and by default CN/RK4, to stay comparable) uses `dBP` in front of `Q` where `dQP` looks intended (the pressure perturbation is `dP = cs2 de + dBP dB + dQP dQ + dSP dS`, so the `Q` term should carry its own coefficient `dQP`, not `dBP`; `dQP` is tiny, about 1e-4 of `dBP`, so the effect on the results is small); `bj_flow_cn`/`bj_flow_rk4` take `fix_dQP_in_pressure = true` to use `dQP`.
+- In `dP`, the explicit code (and by default CN/RK4, to stay comparable) uses `dBP` in front of `Q` where `dQP` looks intended (the pressure perturbation is `dP = cs2 de + dBP dB + dQP dQ + dSP dS`, so the `Q` term should carry its own coefficient `dQP`, not `dBP`; in the `1n0` tables `|dQP|` is only about 1% of `|dBP|`, so the typo overstates the `Q` contribution to the pressure roughly 100-fold; how much this matters depends on the size of the `Q` perturbation); `bj_flow_cn`/`bj_flow_rk4` take `fix_dQP_in_pressure = true` to use `dQP`.
 - The notebooks load data from `../datasets/` which is not part of this repository.
 
 Further documentation: [docs/index.md](docs/index.md)
