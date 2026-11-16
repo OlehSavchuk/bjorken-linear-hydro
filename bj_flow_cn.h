@@ -15,12 +15,12 @@
 class bj_flow_cn : public bj_flow
 {
 public:
-	explicit bj_flow_cn(const std::string& name = "1n0", double dt_cn_ = 0.01, bool fix_dQP_in_pressure = false)
+	explicit bj_flow_cn(const std::string& name = "1n0", double dt_cn_ = 0.01, bool fix_dQP_in_pressure = true)
 		: bj_flow(name), dt_cn(dt_cn_), fix_dQP(fix_dQP_in_pressure) {}
 
 	double dt_cn;   // time step; the last step is shortened to hit t_end exactly
-	// The explicit code uses dBP (not dQP) in front of Q in dP = cs2 e + dBP B + dBP Q + dSP S,
-	// probably a typo. false (default) reproduces the explicit code, true uses dQP.
+	// dP = cs2 e + dBP B + dQP Q + dSP S. Older versions of the explicit code used dBP in front of Q (typo);
+	// true (default) uses dQP, false reproduces that old behaviour.
 	bool fix_dQP;
 
 	void step(double dt_step);   // one CN step of length dt_step

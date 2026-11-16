@@ -11,7 +11,7 @@
 class bj_flow_rk4 : public bj_flow_cn
 {
 public:
-	explicit bj_flow_rk4(const std::string& name = "1n0", double dt_rk4_ = 2e-4, bool fix_dQP_in_pressure = false)
+	explicit bj_flow_rk4(const std::string& name = "1n0", double dt_rk4_ = 2e-4, bool fix_dQP_in_pressure = true)
 		: bj_flow_cn(name, dt_rk4_, fix_dQP_in_pressure) {}
 
 	void step(double dt_step);

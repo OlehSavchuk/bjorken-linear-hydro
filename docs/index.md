@@ -102,7 +102,7 @@ They use the real `1n0` tables (`PREFIX=tables/1n0`, the default of `make compar
 ## Things to know
 
 * Grid is periodic (point `Nl-1` is a neighbour of point 0) although `initial_conditions` zeroes the end points; harmless for localised sources.
-* `dP` uses `dBP` in front of `Q` (not `dQP`) in the explicit code; `bj_flow_cn` reproduces this by default, `fix_dQP_in_pressure = true` uses `dQP`. Please check which is intended: the pressure perturbation is `dP = cs2 de + dBP dB + dQP dQ + dSP dS`, so `Q` should carry `dQP` (a likely copy-paste typo). In the `1n0` tables `|dQP|` is only about 1% of `|dBP|`, so the typo overstates the `Q` contribution to the pressure roughly 100-fold; the impact depends on the size of the `Q` perturbation.
+* **Fixed:** `dP = cs2 de + dBP dB + dQP dQ + dSP dS`. The explicit code used to have `dBP` in front of `Q` (typo; `|dQP|` is only about 1% of `|dBP|` in the `1n0` tables); all solvers now use `dQP`. `fix_dQP_in_pressure = false` in `bj_flow_cn`/`bj_flow_rk4` reproduces the old behaviour. Effect on the Green functions (CN, relative to the maximum): 1.7% (`t1 = 1`) and 0.7% (`t1 = 6`) for the `Q` source, at most 1.2e-4 for the other sources. The comparison figures were regenerated with the fix.
 * `Hydro-fluks.cpp` uses `PI = 3.14` in the Gaussian; `Hydro-fluks-cn.cpp` does too, to stay comparable.
 
 ## Publications

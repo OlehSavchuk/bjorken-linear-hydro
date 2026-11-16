@@ -49,7 +49,7 @@ void bj_flow::step()
 	double dB_P = dBP(t);
 	double dQ_P = dQP(t);
 	double dS_P = dSP(t);
-	double dP = cs2(t)*e[0] + dB_P * B[0] +dB_P * Q[0] + dS_P * S[0];
+	double dP = cs2(t)*e[0] + dB_P * B[0] +dQ_P * Q[0] + dS_P * S[0];
 	double tMst = Mst(t);
 	double tD = D(t);
 	double trhoB = rhoB(t);
@@ -75,7 +75,7 @@ void bj_flow::step()
 	tu[0] = -(2.  / t + tdMst / tMst) * u[0] - (tcs2 * deta_e + dB_P * deta_B + dQ_P * deta_Q + dS_P * deta_S) / tMst / t + 4./3. * tetas / t2 * d2eta_u / tMst;
 	for (int i = 1; i < Nl-1; i++)
 	{
-		dP = tcs2 * e[i] + dB_P * B[i] + dB_P * Q[i] + dS_P * S[i];
+		dP = tcs2 * e[i] + dB_P * B[i] + dQ_P * Q[i] + dS_P * S[i];
 		deta_u = (u[i + 1] - u[i - 1]) / (ddt);
 		deta_B = (B[i + 1] - B[i - 1]) / (ddt);
 		deta_Q = (Q[i + 1] - Q[i - 1]) / (ddt);
@@ -91,7 +91,7 @@ void bj_flow::step()
 		te[i] = -(e[i]+dP)/t - (tMst-4.*tetas/(3.*t)) * deta_u/t;
 		tu[i] = -(2. / t + tdMst / tMst) *u[i] - (tcs2 * deta_e + dB_P * deta_B + dQ_P * deta_Q+ dS_P * deta_S) / tMst / t +4./3.*tetas/t2*d2eta_u/tMst;
 	}
-	dP = tcs2 * e[Nl - 1] + dB_P * B[Nl - 1] + dB_P * Q[Nl - 1] + dS_P * S[Nl - 1];
+	dP = tcs2 * e[Nl - 1] + dB_P * B[Nl - 1] + dQ_P * Q[Nl - 1] + dS_P * S[Nl - 1];
 	deta_u = -(u[Nl - 2] - u[0]) / (ddt);
 	deta_B = -(B[Nl - 2] - B[0]) / (ddt);
 	deta_Q = -(Q[Nl - 2] - Q[0]) / (ddt);
