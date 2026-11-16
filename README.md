@@ -14,6 +14,7 @@ functions) in spatial rapidity. Python notebooks build the equation-of-state inp
 | `bj_flow_cn.h/.cpp` | `bj_flow_cn`: **Crank-Nicolson** solver (implicit, 2nd order, unconditionally stable, ~10x faster than the explicit code at `dt = 0.01`) |
 | `bj_flow_rk4.h/.cpp` | `bj_flow_rk4`: **Runge-Kutta 4** solver (explicit, 4th order, `dt` 25-50x larger than forward Euler, limited by diffusion stability) |
 | `Hydro-fluks-cn.cpp` | Green-function driver for the CN solver; built with `-DUSE_RK4` (`make Hydro-fluks-rk4`) it uses RK4 instead |
+| `tables/` | `make_1n0_tables.py` and the generated `1n0-*.dat` solver tables |
 | `tests/` | Validation programs `test_cn.cpp`, `test_rk4.cpp` and the small test tables `test-*.dat` |
 | `compare/` | `compare_solvers.cpp` (Green functions from Euler, CN and RK4), `plot_green_comparison.py`, and the data in `compare/results/` |
 | `docs/figures/` | Comparison figures (below) |
@@ -35,8 +36,9 @@ functions) in spatial rapidity. Python notebooks build the equation-of-state inp
 | `make compare` | Runs all three solvers on the same problem (about 30 s) and writes `compare/results/*.dat` and the figures in `docs/figures/` |
 
 The solver reads transport/EoS tables named `<name_rho>-{Mst,dMst,etas,dpde,dpdrhoB,dpdrhoQ,dpdrhoS,D}.dat`
-(`name_rho` is set in `bj_flow.h`, default `1n0`) from the working directory. Example tables
-for `0n0` are in the `eta2tau13` project.
+(`name_rho` is set in `bj_flow.h`, default `1n0`) from the working directory. The real `1n0` set (HRG equation of state at
+`rhoB = 0.16/t fm^-3`, `rhoQ = 0.4 rhoB`) is in `tables/`; `make tables` rebuilds it from the `*-n-1n0.dat` files with `tables/make_1n0_tables.py`
+(assumptions and units are documented in `docs/index.md`). Copy or link `tables/1n0-*.dat` into the working directory to run the solvers with it.
 
 ## Solver comparison
 
@@ -49,11 +51,13 @@ with the three solvers and plots them. Every figure carries the run parameters.
 
 ![Relative differences](docs/figures/green_comparison_differences.png)
 
-* All three solvers agree: the curves lie on top of each other, and the largest relative difference per source/response pair is 7e-5 at `t1 = 1` and 1e-5 at `t1 = 6` (the difference to forward Euler is mostly Euler's own first-order error).
+* All three solvers agree: the curves lie on top of each other, and the largest relative difference per source/response pair is 3.4e-5 at `t1 = 1` and 1.1e-5 at `t1 = 6` (the difference to forward Euler is mostly Euler's own first-order error).
 * Run time for the ten runs: forward Euler (`dt = 2e-5`) 17.6 s, RK4 (`dt = 5e-4`) 4.9 s, Crank-Nicolson (`dt = 0.01`) 1.6 s.
 * `S` only responds to a source in `S` (the response panels for the other sources are exactly zero).
-* **The figures were made with the test tables in `tests/`**: the `0n0` EoS and transport tables with *synthetic constant* `dp/drho` tables (0.05, 0.02, 0.03). The `1n0-*` tables are not in this repository,
-  so the curves are not physical. To redo the figures with real tables, put them in a folder with a common prefix and run `compare/compare_solvers <prefix> compare/results` from that folder, then `python3 compare/plot_green_comparison.py`.
+* The figures use the real `1n0` tables from `tables/` (`make compare`; `make compare PREFIX=tests/test` reproduces the earlier run with the synthetic test tables).
+  RK4 at `dt = 5e-4` is about a factor 2 below the diffusion stability limit (about 1.0e-3 at `t = 1`).
+
+![EoS tables](docs/figures/eos_1n0_tables.png)
 
 ## Known issues (left unchanged on purpose)
 

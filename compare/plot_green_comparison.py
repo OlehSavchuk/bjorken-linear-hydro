@@ -28,8 +28,11 @@ RESP_LABEL = [r"$B$", r"$Q$", r"$S$", r"$e$", r"$u$"]
 SOLVERS = [("euler", "forward Euler  (dt = %s)" % P["dt_euler"], dict(color="k", lw=2.6, alpha=0.55)),
            ("cn", "Crank-Nicolson  (dt = %s)" % P["dt_cn"], dict(color="tab:red", lw=1.4, ls="--")),
            ("rk4", "RK4  (dt = %s)" % P["dt_rk4"], dict(color="tab:blue", lw=1.4, ls=":"))]
-TABLES = ("tables: %s-*.dat" % P["table_prefix"]) + (
-    "  (test set: 0n0 EoS + synthetic constant dp/drho = 0.05, 0.02, 0.03; not physical)" if P["table_prefix"] == "test" else "")
+if P["table_prefix"] == "test":
+    TABLES = "tables: tests/test-*.dat  (test set: 0n0 EoS + synthetic constant dp/drho = 0.05, 0.02, 0.03; not physical)"
+else:
+    TABLES = ("tables: %s-*.dat  (HRG EoS, ideal trajectory rhoB = 0.16/t, rhoQ = 0.4 rhoB, rhoS = 0; "
+              "eta/s = 2/(4 pi), D T = 2/(2 pi))" % P["table_prefix"])
 
 
 def param_text(t1):

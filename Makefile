@@ -36,8 +36,16 @@ test-rk4: tests/test_rk4
 compare/compare_solvers: compare/compare_solvers.cpp bj_flow.cpp bj_flow_cn.cpp bj_flow_rk4.cpp
 	$(CXX) $(CXXFLAGS) -o $@ compare/compare_solvers.cpp bj_flow.cpp bj_flow_cn.cpp bj_flow_rk4.cpp
 
-# Green-function comparison of the three solvers: data in compare/results, figures in docs/figures
+# Green-function comparison of the three solvers: data in compare/results, figures in docs/figures.
+# PREFIX selects the table set (default: the HRG tables built by tables/make_1n0_tables.py).
+PREFIX ?= tables/1n0
 compare: compare/compare_solvers
 	mkdir -p compare/results docs/figures
-	cd tests && ../compare/compare_solvers test ../compare/results
+	./compare/compare_solvers $(PREFIX) compare/results
 	python3 compare/plot_green_comparison.py
+
+# polynomial solver tables from the HRG trajectory tables of this folder
+tables:
+	cd tables && python3 make_1n0_tables.py
+
+.PHONY: compare tables

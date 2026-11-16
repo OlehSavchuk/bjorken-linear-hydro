@@ -1,4 +1,4 @@
-table_prefix=test
+table_prefix=tables/1n0
 Nl=501
 eta_max=5
 t_end=11
@@ -8,6 +8,6 @@ source_PI=3.14
 dt_euler=2e-05
 dt_cn=0.01
 dt_rk4=0.0005
-seconds_euler=17.5503
-seconds_cn=1.59914
-seconds_rk4=4.89204
+seconds_euler=17.0441
+seconds_cn=1.61601
+seconds_rk4=4.95163
