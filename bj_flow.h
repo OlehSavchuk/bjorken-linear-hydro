@@ -5,6 +5,7 @@
 #include <fstream>
 class bj_flow
 {
+protected:
 	const double eta_max = 5;
 	const int Nl = 501;
 	const int pow_pol = 11;
@@ -69,8 +70,9 @@ public:
 	std::vector<double> get_S();
 	std::vector<double> get_u();
 	std::vector<double> get_e();
-	bj_flow()
+	bj_flow(const std::string& name = "1n0")
 	{
+		name_rho = name;
 		tB = std::vector<double>(Nl, 0);
 		tQ = std::vector<double>(Nl, 0);
 		tS = std::vector<double>(Nl, 0);

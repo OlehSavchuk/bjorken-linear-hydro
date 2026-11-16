@@ -7,3 +7,5 @@ Green-*.dat
 _to_delete/
 .ipynb_checkpoints/
 .DS_Store
+Hydro-fluks-cn
+tests/test_cn

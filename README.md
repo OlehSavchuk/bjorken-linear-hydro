@@ -11,7 +11,9 @@ functions) in spatial rapidity. Python notebooks build the equation-of-state inp
 |---|---|
 | `bj_flow.h`, `bj_flow.cpp` | `bj_flow` class: Bjorken flow solver (grid `Nl = 501`, `eta_max = 5`) |
 | `Hydro-fluks.cpp` | Driver: loops over start times, perturbs each charge in turn, writes `Green-<source>-<response>.dat` |
-| `Makefile` | `make` builds `Hydro-fluks` |
+| `bj_flow_cn.h/.cpp`, `Hydro-fluks-cn.cpp` | Crank-Nicolson solver and driver (second order, unconditionally stable, ~10x faster); see `docs/index.md` |
+| `tests/` | Explicit-vs-CN validation (`make test`) with small test tables |
+| `Makefile` | `make` builds `Hydro-fluks`, `make Hydro-fluks-cn` the CN driver, `make test` runs the validation |
 | `eos-3mu.ipynb` | Hadron-resonance-gas EoS with three chemical potentials (uses `pdg2020`) |
 | `lattice-eos-fits-v1/-v2.ipynb` | Polynomial/Pade fits of lattice EoS data (v2 is the later version) |
 | `pdg2020` | PDG hadron list (mass, degeneracy, B, Q, S, ...) |
@@ -33,3 +35,5 @@ for `0n0` are in the `eta2tau13` project.
 - `delta()` in `Hydro-fluks.cpp` uses `PI = 3.14`; use `M_PI` if the exact Gaussian normalisation matters.
 - The `Noutput` variable is unused (compiler warnings).
 - The notebooks load data from `../datasets/` which is not part of this repository.
+
+Further documentation: [docs/index.md](docs/index.md)
