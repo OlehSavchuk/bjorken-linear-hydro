@@ -1,0 +1,13 @@
+table_prefix=test
+Nl=501
+eta_max=5
+t_end=11
+t1_values=1,6
+source_sigma2=0.01
+source_PI=3.14
+dt_euler=2e-05
+dt_cn=0.01
+dt_rk4=0.0005
+seconds_euler=17.5503
+seconds_cn=1.59914
+seconds_rk4=4.89204

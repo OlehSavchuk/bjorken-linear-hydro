@@ -27,7 +27,7 @@ public:
 	void step() { step(dt_cn); }
 	void evolve_to(double t_end); // advances t -> t_end with steps of at most dt_cn
 
-private:
+protected:   // shared with bj_flow_rk4
 	typedef double Mat[5][5];
 	void blocks(double tm, Mat Lo, Mat Dg, Mat Up);
 };

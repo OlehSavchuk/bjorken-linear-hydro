@@ -9,3 +9,7 @@ _to_delete/
 .DS_Store
 Hydro-fluks-cn
 tests/test_cn
+Hydro-fluks-rk4
+tests/test_rk4
+compare/compare_solvers
+__pycache__/

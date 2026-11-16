@@ -1,9 +1,20 @@
-// Green's functions of the linearised Bjorken hydro with the Crank-Nicolson solver.
+// Green's functions of the linearised Bjorken hydro with the Crank-Nicolson solver
+// (build with -DUSE_RK4, i.e. `make Hydro-fluks-rk4`, for the 4th-order Runge-Kutta solver instead).
 // Same output as Hydro-fluks.cpp (files Green-<src>-<resp>.dat, one line per start time, Nl values per line),
 // but ~10x faster and with a user-chosen time step.
 //
-//   ./Hydro-fluks-cn [dt=0.01] [Ntstart=500] [table_prefix=1n0] [out_dir=.]
+//   ./Hydro-fluks-cn [dt=0.01]   (Hydro-fluks-rk4: default dt=2e-4, must stay below the diffusion stability limit) [Ntstart=500] [table_prefix=1n0] [out_dir=.]
+#ifdef USE_RK4
+#include "bj_flow_rk4.h"
+typedef bj_flow_rk4 solver_t;
+static const char* SOLVER_NAME = "RK4";
+static const double DT_DEFAULT = 2e-4;
+#else
 #include "bj_flow_cn.h"
+typedef bj_flow_cn solver_t;
+static const char* SOLVER_NAME = "Crank-Nicolson";
+static const double DT_DEFAULT = 0.01;
+#endif
 #include <cmath>
 #include <cstdlib>
 #include <fstream>
@@ -21,7 +32,7 @@ static double delta(int i, double eta_max, int Nl)
 
 int main(int argc, char** argv)
 {
-	double dt = argc > 1 ? atof(argv[1]) : 0.01;
+	double dt = argc > 1 ? atof(argv[1]) : DT_DEFAULT;
 	int Ntstart = argc > 2 ? atoi(argv[2]) : 500;
 	std::string prefix = argc > 3 ? argv[3] : "1n0";
 	std::string out = argc > 4 ? argv[4] : ".";
@@ -30,7 +41,7 @@ int main(int argc, char** argv)
 	const char* src_name[5] = { "B", "Q", "S", "E", "U" };      // IC index 0..4 = B, Q, S, e, u
 	const char* resp_name[5] = { "B", "Q", "S", "E", "Uz" };
 
-	bj_flow_cn system(prefix, dt);
+	solver_t system(prefix, dt);
 	for (int src = 0; src < 5; src++)
 	{
 		std::vector<std::ofstream> files(5);
@@ -51,7 +62,7 @@ int main(int argc, char** argv)
 				files[r] << std::endl;
 			}
 		}
-		std::cerr << "source " << src_name[src] << " done" << std::endl;
+		std::cerr << SOLVER_NAME << ": source " << src_name[src] << " done" << std::endl;
 	}
 	return 0;
 }

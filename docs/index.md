@@ -28,8 +28,10 @@ The Green's function drivers put a Gaussian (`sigma^2 = 0.01`) source `delta(eta
 | `bj_flow.h/.cpp` | Explicit solver (forward Euler, central differences, `dt = 2e-5`) |
 | `bj_flow_cn.h/.cpp` | **Crank-Nicolson** solver, derived from `bj_flow` (same coefficients, same stencil) |
 | `Hydro-fluks.cpp` | Driver for the explicit solver, writes `Green-<src>-<resp>.dat` |
-| `Hydro-fluks-cn.cpp` | Same output with CN: `./Hydro-fluks-cn [dt] [Ntstart] [table_prefix] [out_dir]` |
-| `tests/test_cn.cpp` | Explicit vs CN comparison and CN convergence study (`make test`) |
+| `bj_flow_rk4.h/.cpp` | **Runge-Kutta 4** solver, derived from `bj_flow_cn` (shares the operator `A(t)`) |
+| `Hydro-fluks-cn.cpp` | Same output with CN: `./Hydro-fluks-cn [dt] [Ntstart] [table_prefix] [out_dir]`; compiled with `-DUSE_RK4` (`make Hydro-fluks-rk4`) it runs RK4 |
+| `tests/test_cn.cpp`, `tests/test_rk4.cpp` | Validation of CN and RK4 (`make test`, `make test-rk4`) |
+| `compare/` | Three-solver Green-function comparison and plot script (`make compare`), figures in `docs/figures/` |
 
 ### Table files
 
@@ -63,6 +65,24 @@ The system is `dy/dt = A(t) y` with `y = (B, Q, S, e, u)`. Each step solves
 
 Error falls 4x per halved step (second order). The difference between CN and the explicit code saturates at about 2.3e-5 (relative L2 over all fields):
 that is the first-order error of the explicit scheme itself. Run time for one start time: explicit 2.2 s, CN with `dt = 0.01` 0.21 s.
+
+## Runge-Kutta 4
+
+`bj_flow_rk4` integrates `y' = A(t) y` with the classical RK4 scheme (stages at `t`, `t + dt/2` twice, `t + dt`), using the same operator blocks as the CN solver.
+
+* 4th order in `dt`, but **explicit**: `dt` must stay below the diffusion stability limit, roughly `2.78 h^2 t^2 / (4 max(D, 4 etas/(3M)))`
+  (about 1.2e-3 at `t = 1` for the test tables, growing like `t^2`; the default `dt = 2e-4` has a safety factor of about 6).
+* With the test tables RK4 at `dt = 1.1e-3 ... 2e-4` agrees with RK4 at `dt = 5e-5` to about 1e-12 (relative L2, `t = 1 -> 6`), i.e. the time-integration error is at round-off level;
+  the remaining 2.4e-5 difference to the explicit code is the forward-Euler error. (`make test-rk4`)
+* Cost: about 4 operator applications per step, so RK4 at `dt = 5e-4` runs about 3.6x faster than forward Euler at `dt = 2e-5`; Crank-Nicolson at `dt = 0.01` is faster still (about 11x) but only second order.
+
+## Solver comparison (`make compare`)
+
+Green functions at `t = 11` for a delta source in each field, started at `t1 = 1` and `t1 = 6`; forward Euler (`dt = 2e-5`), CN (`dt = 0.01`), RK4 (`dt = 5e-4`).
+Figures (with their parameters) are in `docs/figures/`: `green_comparison_t1_1.png`, `green_comparison_t1_6.png` (5x5 Green-function matrices with the three solvers overlaid)
+and `green_comparison_differences.png` (max difference per source/response pair, relative to the largest Euler value).
+Differences between solvers are between 1e-6 and 7e-5, run times for ten runs 17.6 s (Euler), 4.9 s (RK4), 1.6 s (CN).
+They were produced with the test tables (synthetic `dp/drho`), so they demonstrate the numerics, not the physics.
 
 ## Things to know
 
