@@ -1,4 +1,4 @@
-# Hydro-fluks (3-charge EoS)
+# bjorken-linear-hydro (formerly Hydro-fluks-eos3)
 
 C++ code for a 1D Bjorken-flow hydrodynamic model with conserved baryon, electric
 charge and strangeness densities. It evolves a delta-function perturbation in each of
@@ -63,7 +63,14 @@ with the three solvers and plots them. Every figure carries the run parameters.
 
 - `delta()` in `Hydro-fluks.cpp` uses `PI = 3.14`; use `M_PI` if the exact Gaussian normalisation matters.
 - The `Noutput` variable is unused (compiler warnings).
-- In `dP`, the explicit code (and by default CN/RK4, to stay comparable) uses `dBP` in front of `Q` where `dQP` looks intended; `bj_flow_cn`/`bj_flow_rk4` take `fix_dQP_in_pressure = true` to use `dQP`.
+- In `dP`, the explicit code (and by default CN/RK4, to stay comparable) uses `dBP` in front of `Q` where `dQP` looks intended (the pressure perturbation is `dP = cs2 de + dBP dB + dQP dQ + dSP dS`, so the `Q` term should carry its own coefficient `dQP`, not `dBP`; `dQP` is tiny, about 1e-4 of `dBP`, so the effect on the results is small); `bj_flow_cn`/`bj_flow_rk4` take `fix_dQP_in_pressure = true` to use `dQP`.
 - The notebooks load data from `../datasets/` which is not part of this repository.
 
 Further documentation: [docs/index.md](docs/index.md)
+
+## Related publications
+
+This is the linearised Bjorken-flow hydrodynamics (Green functions for energy, momentum and the B, Q, S charges) behind:
+
+* O. Savchuk and S. Pratt, *Correlations of Conserved Quantities at Finite Baryon Density*, Phys. Rev. C **109**, 024910 (2024), [arXiv:2311.02046](https://arxiv.org/abs/2311.02046).
+* O. Savchuk, *Sensitivity of transverse momentum correlations to early-stage and thermal fluctuations*, [arXiv:2402.12504](https://arxiv.org/abs/2402.12504).

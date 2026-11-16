@@ -102,5 +102,10 @@ They use the real `1n0` tables (`PREFIX=tables/1n0`, the default of `make compar
 ## Things to know
 
 * Grid is periodic (point `Nl-1` is a neighbour of point 0) although `initial_conditions` zeroes the end points; harmless for localised sources.
-* `dP` uses `dBP` in front of `Q` (not `dQP`) in the explicit code; `bj_flow_cn` reproduces this by default, `fix_dQP_in_pressure = true` uses `dQP`. Please check which is intended.
+* `dP` uses `dBP` in front of `Q` (not `dQP`) in the explicit code; `bj_flow_cn` reproduces this by default, `fix_dQP_in_pressure = true` uses `dQP`. Please check which is intended: the pressure perturbation is `dP = cs2 de + dBP dB + dQP dQ + dSP dS`, so `Q` should carry `dQP` (a likely copy-paste typo). Since `dQP` is about 1e-4 of `dBP` in the `1n0` tables, the effect is small.
 * `Hydro-fluks.cpp` uses `PI = 3.14` in the Gaussian; `Hydro-fluks-cn.cpp` does too, to stay comparable.
+
+## Publications
+
+* O. Savchuk and S. Pratt, *Correlations of Conserved Quantities at Finite Baryon Density*, Phys. Rev. C 109, 024910 (2024), arXiv:2311.02046.
+* O. Savchuk, *Sensitivity of transverse momentum correlations to early-stage and thermal fluctuations*, arXiv:2402.12504.
